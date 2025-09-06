@@ -1,0 +1,17 @@
+{
+  "name": "rspack-mf-1.5",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "private": true,
+  "scripts": {
+    "dev:host": "pnpm --filter host-app dev",
+    "dev:mfe1": "pnpm --filter mfe1 dev",
+    "dev:mfe2": "pnpm --filter mfe2 dev",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.6.3"
+}
