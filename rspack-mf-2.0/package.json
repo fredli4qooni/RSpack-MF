@@ -7,10 +7,20 @@
   "scripts": {
     "dev:host": "pnpm --filter host-app dev",
     "dev:mfe1": "pnpm --filter mfe1 dev",
-    "dev:mfe2": "pnpm --filter mfe2 dev"
+    "dev:mfe2": "pnpm --filter mfe2 dev",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier . --write"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "packageManager": "pnpm@10.6.3"
+  "packageManager": "pnpm@10.6.3",
+  "devDependencies": {
+    "@trivago/prettier-plugin-sort-imports": "^5.2.2",
+    "eslint": "^9.35.0",
+    "eslint-plugin-jsdoc": "^54.3.1",
+    "prettier": "^3.6.2",
+    "typescript-eslint": "^8.42.0"
+  }
 }

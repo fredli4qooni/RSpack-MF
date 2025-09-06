@@ -62,4 +62,4 @@ Setiap proyek di dalam repositori ini adalah monorepo yang dikelola oleh `pnpm w
 
 ## Analisis
 
-Untuk analisis perbandingan yang mendalam, silakan merujuk ke artikel Medium [LINK KE ARTIKEL ANDA DI SINI].
+Untuk analisis perbandingan yang mendalam, silakan merujuk ke artikel Medium [https://medium.com/@fredlifourqoni9/membangun-microfrontend-dengan-rspack-perbandingan-module-federation-v1-5-vs-v2-0-f1241d83690e].
