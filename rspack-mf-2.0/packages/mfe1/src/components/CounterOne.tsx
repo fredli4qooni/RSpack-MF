@@ -1,4 +1,6 @@
 import { useState } from 'react';
+// Impor komponen Button dari direktori 'common'
+import Button from '../common/Button';
 
 /**
  * Komponen CounterOne adalah microfrontend yang mandiri.
@@ -7,13 +9,6 @@ import { useState } from 'react';
  *
  * @component
  * @returns {JSX.Element} Elemen JSX yang dirender untuk komponen penghitung.
- * @example
- * // Cara menggunakan komponen ini di aplikasi lain:
- * import CounterOne from 'mfe1/CounterOne';
- * 
- * function MyPage() {
- *   return <CounterOne />;
- * }
  */
 const CounterOne = () => {
   const [count, setCount] = useState(0);
@@ -21,7 +16,8 @@ const CounterOne = () => {
     <div style={{ padding: '15px', border: '2px solid purple', borderRadius: '5px' }}>
       <h3>Penghitung dari MFE 1</h3>
       <h2>{count}</h2>
-      <button onClick={() => setCount(count + 1)}>Tambah +1</button>
+      {/* komponen <Button> */}
+      <Button onClick={() => setCount(count + 1)}>Tambah +1</Button>
     </div>
   );
 };

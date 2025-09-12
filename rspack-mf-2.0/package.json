@@ -10,7 +10,8 @@
     "dev:mfe2": "pnpm --filter mfe2 dev",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "format": "prettier . --write"
+    "format": "prettier . --write",
+    "build": "pnpm --filter @mfe/ui-kit build"
   },
   "keywords": [],
   "author": "",
@@ -22,5 +23,8 @@
     "eslint-plugin-jsdoc": "^54.3.1",
     "prettier": "^3.6.2",
     "typescript-eslint": "^8.42.0"
+  },
+  "dependencies": {
+    "@module-federation/retry-plugin": "^0.18.4"
   }
 }

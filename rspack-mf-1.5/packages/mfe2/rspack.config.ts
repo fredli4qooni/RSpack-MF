@@ -21,13 +21,13 @@ const config: Configuration = {
             options: {
               jsc: {
                 parser: { syntax: "typescript", tsx: true },
-                transform: { react: { runtime: "automatic" } },
-              },
-            },
-          },
-        ],
-      },
-    ],
+                transform: { react: { runtime: "automatic" } }
+              }
+            }
+          }
+        ]
+      }
+    ]
   },
   plugins: [
     new rspack.HtmlRspackPlugin({ template: "./index.html" }),
@@ -35,17 +35,17 @@ const config: Configuration = {
       name: "mfe2",
       filename: "remoteEntry.js",
       exposes: {
-        "./CounterTwo": "./src/components/CounterTwo.tsx",
+        "./CounterTwo": "./src/components/CounterTwo.tsx"
       },
       shared: {
         react: { singleton: true, requiredVersion: "^19.0.0", eager: true },
         "react-dom": {
           singleton: true,
           requiredVersion: "^19.0.0",
-          eager: true,
-        },
-      },
-    }),
-  ],
+          eager: true
+        }
+      }
+    })
+  ]
 };
 export default config;

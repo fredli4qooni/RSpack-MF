@@ -1,35 +1,27 @@
-import React, { Suspense } from 'react';
+import MfeLoader from './components/MfeLoader';
 
-// Mengimpor komponen secara dinamis dari microfrontend remote.
-// React.lazy memungkinkan komponen ini dimuat hanya saat dibutuhkan.
-const CounterOne = React.lazy(() => import('mfe1/CounterOne'));
-const CounterTwo = React.lazy(() => import('mfe2/CounterTwo'));
+// Definisikan konfigurasi MFE kita di satu tempat
+const mfeConfig = {
+  mfe1: {
+    remoteUrl: 'http://localhost:3001/remoteEntry.js',
+    scope: 'mfe1',
+    module: './CounterOne',
+  },
+  mfe2: {
+    remoteUrl: 'http://localhost:3002/remoteEntry.js',
+    scope: 'mfe2',
+    module: './CounterTwo',
+  },
+};
 
-/**
- * Komponen App utama untuk host-app.
- * Bertindak sebagai "shell" atau "integrator" dalam arsitektur microfrontend.
- * Tugas utamanya adalah mengimpor komponen dari MFE remote (`mfe1`, `mfe2`)
- * dan merakitnya menjadi satu tampilan dasbor yang kohesif.
- *
- * @component
- * @returns {JSX.Element} Halaman dasbor utama yang menampilkan gabungan MFE.
- */
 function App() {
   return (
     <div style={{ padding: '20px' }}>
-      <h1>Dasboard Host App</h1>
-      <p>Halaman ini menggabungkan komponen dari MFE 1 dan MFE 2.</p>
+      <h1>Dasbor Host App (Manual Script Loading)</h1>
+      <p>Pendekatan ini memberikan kontrol penuh atas pemuatan dan percobaan ulang MFE.</p>
       <div style={{ display: 'flex', gap: '20px', marginTop: '20px' }}>
-        {/* 
-          Suspense digunakan sebagai fallback UI, menampilkan pesan "memuat"
-          selama kode untuk MFE remote sedang diunduh melalui jaringan.
-        */}
-        <Suspense fallback={<div>Memuat MFE 1...</div>}>
-          <CounterOne />
-        </Suspense>
-        <Suspense fallback={<div>Memuat MFE 2...</div>}>
-          <CounterTwo />
-        </Suspense>
+        <MfeLoader name="mfe1" {...mfeConfig.mfe1} />
+        <MfeLoader name="mfe2" {...mfeConfig.mfe2} />
       </div>
     </div>
   );

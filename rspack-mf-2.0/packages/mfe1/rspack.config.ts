@@ -39,7 +39,7 @@ const config: Configuration = {
      * Ini mengubah aplikasi ini menjadi sebuah microfrontend.
      */
     new ModuleFederationPlugin({
-      // Nama unik untuk MFE ini. Akan digunakan oleh host untuk mengimpor.
+      // Nama untuk MFE ini. Akan digunakan oleh host untuk mengimpor.
       name: "mfe1",
 
       // Nama file manifest yang akan dihasilkan. Host akan menunjuk ke file ini.

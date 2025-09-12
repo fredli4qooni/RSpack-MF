@@ -7,6 +7,10 @@ settings:
 importers:
 
   .:
+    dependencies:
+      '@module-federation/retry-plugin':
+        specifier: ^0.18.4
+        version: 0.18.4
     devDependencies:
       '@trivago/prettier-plugin-sort-imports':
         specifier: ^5.2.2
@@ -26,9 +30,15 @@ importers:
 
   packages/host-app:
     dependencies:
+      '@mfe/ui-kit':
+        specifier: workspace:^
+        version: link:../ui-kit
       '@module-federation/enhanced':
         specifier: ^0.18.4
         version: 0.18.4(@rspack/core@1.5.2(@swc/helpers@0.5.17))(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(typescript@5.9.2)
+      '@module-federation/retry-plugin':
+        specifier: ^0.18.4
+        version: 0.18.4
       react:
         specifier: ^19.1.0
         version: 19.1.1
@@ -94,6 +104,9 @@ importers:
 
   packages/mfe2:
     dependencies:
+      '@mfe/ui-kit':
+        specifier: workspace:^
+        version: link:../ui-kit
       '@module-federation/enhanced':
         specifier: ^0.18.4
         version: 0.18.4(@rspack/core@1.5.2(@swc/helpers@0.5.17))(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(typescript@5.9.2)
@@ -124,6 +137,18 @@ importers:
         version: 0.17.0
       typescript:
         specifier: ^5.9.2
+        version: 5.9.2
+
+  packages/ui-kit:
+    devDependencies:
+      '@types/react':
+        specifier: ^18.3.3
+        version: 18.3.24
+      react:
+        specifier: ^19.1.1
+        version: 19.1.1
+      typescript:
+        specifier: ^5.4.5
         version: 5.9.2
 
 packages:
@@ -499,6 +524,9 @@ packages:
   '@module-federation/manifest@0.18.4':
     resolution: {integrity: sha512-1+sfldRpYmJX/SDqG3gWeeBbPb0H0eKyQcedf77TQGwFypVAOJwI39qV0yp3FdjutD7GdJ2TGPBHnGt7AbEvKA==}
 
+  '@module-federation/retry-plugin@0.18.4':
+    resolution: {integrity: sha512-vIJgNARDAqI2CtvqSW6Fst2xOC4IM9QG2pXURl+LXcattdGoq3egMjm+3ncdISGtFOxyh1UuKVzs72nGuTMCtg==}
+
   '@module-federation/rspack@0.18.4':
     resolution: {integrity: sha512-gnvXKtk/w0ML15JHueWej5/8Lkoho7EoYUxvO77nBCnGOlXNqVYqLZ3REy2SS/8SQ4vQK156eSiyUkth2OYQqw==}
     peerDependencies:
@@ -709,6 +737,9 @@ packages:
   '@types/node@24.3.1':
     resolution: {integrity: sha512-3vXmQDXy+woz+gnrTvuvNrPzekOi+Ds0ReMxw0LzBiK3a+1k0kQn9f2NWk+lgD4rJehFUmYy2gMhJ2ZI+7YP9g==}
 
+  '@types/prop-types@15.7.15':
+    resolution: {integrity: sha512-F6bEyamV9jKGAFBEmlQnesRPGOQqS2+Uwi0Em15xenOxHaf2hv6L8YCVn3rPdPJOiJfPiCnLIRyvwVaqMY3MIw==}
+
   '@types/qs@6.14.0':
     resolution: {integrity: sha512-eOunJqu0K1923aExK6y8p6fsihYEn/BYuQ4g0CxAAgFc4b/ZLN4CrsRZ55srTdqoiLzU2B2evC+apEIxprEzkQ==}
 
@@ -719,6 +750,9 @@ packages:
     resolution: {integrity: sha512-qXRuZaOsAdXKFyOhRBg6Lqqc0yay13vN7KrIg4L7N4aaHN68ma9OK3NE1BoDFgFOTfM7zg+3/8+2n8rLUH3OKQ==}
     peerDependencies:
       '@types/react': ^19.0.0
+
+  '@types/react@18.3.24':
+    resolution: {integrity: sha512-0dLEBsA1kI3OezMBF8nSsb7Nk19ZnsyE1LLhB8r27KbgU5H4pvuqZLdtE+aUkJVoXgTVuA+iLIwmZ0TuK4tx6A==}
 
   '@types/react@19.1.12':
     resolution: {integrity: sha512-cMoR+FoAf/Jyq6+Df2/Z41jISvGZZ2eTlnsaJRptmZ76Caldwy1odD4xTr/gNV9VLj0AWgg/nmkevIyUfIIq5w==}
@@ -2646,6 +2680,10 @@ snapshots:
       - utf-8-validate
       - vue-tsc
 
+  '@module-federation/retry-plugin@0.18.4':
+    dependencies:
+      '@module-federation/sdk': 0.18.4
+
   '@module-federation/rspack@0.18.4(@rspack/core@1.5.2(@swc/helpers@0.5.17))(typescript@5.9.2)':
     dependencies:
       '@module-federation/bridge-react-webpack-plugin': 0.18.4
@@ -2908,6 +2946,8 @@ snapshots:
     dependencies:
       undici-types: 7.10.0
 
+  '@types/prop-types@15.7.15': {}
+
   '@types/qs@6.14.0': {}
 
   '@types/range-parser@1.2.7': {}
@@ -2915,6 +2955,11 @@ snapshots:
   '@types/react-dom@19.1.9(@types/react@19.1.12)':
     dependencies:
       '@types/react': 19.1.12
+
+  '@types/react@18.3.24':
+    dependencies:
+      '@types/prop-types': 15.7.15
+      csstype: 3.1.3
 
   '@types/react@19.1.12':
     dependencies:
