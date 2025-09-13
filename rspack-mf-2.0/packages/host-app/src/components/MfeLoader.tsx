@@ -12,9 +12,12 @@ interface MfeLoaderProps {
 type MfeComponent = ComponentType<any> | null;
 type MfeStatus = 'idle' | 'loading' | 'loaded' | 'error';
 
+// mendefinisikan durasi timeout dalam milidetik
+const TIMEOUT_MS = 5000; // 5 detik
+
 /**
- * MfeLoader adalah komponen canggih untuk memuat MFE secara dinamis.
- * Mengelola state loading, error, dan retry dengan memuat skrip secara manual.
+ * MfeLoader adalah komponen untuk memuat MFE secara dinamis.
+ * Sekarang menyertakan logika timeout untuk pemuatan.
  *
  * @component
  */
@@ -25,21 +28,39 @@ const MfeLoader: React.FC<MfeLoaderProps> = ({ name, remoteUrl, scope, module })
   const handleLoad = async () => {
     try {
       setStatus('loading');
-      const LoadedComponent = await loadComponent(remoteUrl, scope, module);
-      setComponent(() => LoadedComponent); // Simpan komponen sebagai fungsi
+
+      // --- LOGIKA TIMEOUT DIMULAI DI SINI ---
+
+      // Promise 1: Pemuatan MFE 
+      const loadingPromise = loadComponent(remoteUrl, scope, module);
+
+      // Promise 2: Promise yang akan gagal setelah TIMEOUT_MS
+      const timeoutPromise = new Promise<never>((_, reject) => {
+        setTimeout(() => {
+          reject(new Error(`Pemuatan untuk MFE "${name}" melebihi ${TIMEOUT_MS / 1000} detik.`));
+        }, TIMEOUT_MS);
+      });
+
+      // Jalankan!
+      // 'await' akan menunggu promise pertama yang selesai (baik berhasil maupun gagal).
+      const LoadedComponent = await Promise.race([loadingPromise, timeoutPromise]);
+      
+      // --- LOGIKA TIMEOUT SELESAI ---
+
+      setComponent(() => LoadedComponent);
       setStatus('loaded');
     } catch (error) {
-      console.error(`Failed to load MFE ${name}:`, error);
+      console.error(`Gagal memuat MFE ${name}:`, error);
       setStatus('error');
     }
   };
 
   useEffect(() => {
     handleLoad();
-  }, []); // Hanya dijalankan sekali saat mount
+  }, []);
 
   if (status === 'loading' || status === 'idle') {
-    return <div>Memuat {name}...</div>;
+    return <div>Memuat {name}... (Timeout dalam {TIMEOUT_MS / 1000} detik)</div>;
   }
 
   if (status === 'error') {
@@ -59,4 +80,6 @@ const MfeLoader: React.FC<MfeLoaderProps> = ({ name, remoteUrl, scope, module })
   }
 
   return null;
-  export default MfeLoader;
+};
+
+export default MfeLoader;
