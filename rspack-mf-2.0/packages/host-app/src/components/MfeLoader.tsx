@@ -1,6 +1,6 @@
-import React, { useEffect, useState, type ComponentType } from 'react';
-import { Button } from '@mfe/ui-kit';
+import React, { useEffect, useState, useCallback, type ComponentType } from 'react';
 import { loadComponent } from '../utils/loadComponent';
+import Spinner from './Spinner';
 
 interface MfeLoaderProps {
   name: string;
@@ -10,76 +10,80 @@ interface MfeLoaderProps {
 }
 
 type MfeComponent = ComponentType<any> | null;
-type MfeStatus = 'idle' | 'loading' | 'loaded' | 'error';
+// hanya butuh dua state: 'loading' dan 'loaded'
+type MfeStatus = 'loading' | 'loaded';
 
-// mendefinisikan durasi timeout dalam milidetik
-const TIMEOUT_MS = 5000; // 5 detik
+const TIMEOUT_MS = 5000;
+const RETRY_INTERVAL_MS = 5000;
 
 /**
- * MfeLoader adalah komponen untuk memuat MFE secara dinamis.
- * Sekarang menyertakan logika timeout untuk pemuatan.
+ * MfeLoader dengan UI loading persisten dan auto-retry.
+ * Menampilkan animasi loading sampai MFE berhasil dimuat.
  *
  * @component
  */
 const MfeLoader: React.FC<MfeLoaderProps> = ({ name, remoteUrl, scope, module }) => {
   const [Component, setComponent] = useState<MfeComponent>(null);
-  const [status, setStatus] = useState<MfeStatus>('idle');
+  const [status, setStatus] = useState<MfeStatus>('loading');
 
-  const handleLoad = async () => {
+  const handleLoad = useCallback(async () => {
     try {
-      setStatus('loading');
-
-      // --- LOGIKA TIMEOUT DIMULAI DI SINI ---
-
-      // Promise 1: Pemuatan MFE 
+      // Tidak perlu mengatur status ke 'loading' lagi karena itu adalah state default
       const loadingPromise = loadComponent(remoteUrl, scope, module);
-
-      // Promise 2: Promise yang akan gagal setelah TIMEOUT_MS
       const timeoutPromise = new Promise<never>((_, reject) => {
         setTimeout(() => {
           reject(new Error(`Pemuatan untuk MFE "${name}" melebihi ${TIMEOUT_MS / 1000} detik.`));
         }, TIMEOUT_MS);
       });
 
-      // Jalankan!
-      // 'await' akan menunggu promise pertama yang selesai (baik berhasil maupun gagal).
       const LoadedComponent = await Promise.race([loadingPromise, timeoutPromise]);
       
-      // --- LOGIKA TIMEOUT SELESAI ---
-
       setComponent(() => LoadedComponent);
-      setStatus('loaded');
+      setStatus('loaded'); // Hanya ubah status jika berhasil
     } catch (error) {
-      console.error(`Gagal memuat MFE ${name}:`, error);
-      setStatus('error');
+      // Jika gagal, tidak mengubah status. hanya mencatat error
+      // dan membiarkan timer percobaan ulang berjalan.
+      console.error(`Gagal memuat MFE ${name}. Mencoba kembali...`, error);
     }
-  };
+  }, [name, remoteUrl, scope, module]);
 
+  // useEffect untuk auto-retry
   useEffect(() => {
+    // Jika sudah berhasil dimuat, hentikan semua proses
+    if (status === 'loaded') {
+      return;
+    }
+
+    // Lakukan pemuatan awal
     handleLoad();
-  }, []);
 
-  if (status === 'loading' || status === 'idle') {
-    return <div>Memuat {name}... (Timeout dalam {TIMEOUT_MS / 1000} detik)</div>;
-  }
+    // Mulai timer untuk mencoba kembali
+    const timerId = setInterval(() => {
+      handleLoad();
+    }, RETRY_INTERVAL_MS);
 
-  if (status === 'error') {
-    return (
-      <div style={{ padding: '15px', border: '2px dashed red', borderRadius: '5px', backgroundColor: '#fff0f0', textAlign: 'center' }}>
-        <h3 style={{ color: 'red', margin: 0 }}>Error!</h3>
-        <p style={{ margin: '5px 0 10px 0' }}>
-          Komponen dari "<strong>{name}</strong>" gagal dimuat.
-        </p>
-        <Button onClick={handleLoad}>Coba Lagi</Button>
-      </div>
-    );
-  }
+    // Fungsi cleanup untuk menghentikan timer
+    return () => {
+      clearInterval(timerId);
+    };
+  }, [status, handleLoad]);
 
+  // --- Tampilan UI ---
+
+  // Jika status adalah 'loaded' DAN Komponen ada, tampilkan MFE
   if (status === 'loaded' && Component) {
     return <Component />;
   }
 
-  return null;
+  // Jika tidak, tampilkan UI loading yang persisten
+  return (
+    <div style={{ padding: '15px', border: '2px dashed #ccc', borderRadius: '5px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '120px' }}>
+      <Spinner />
+      <p style={{ marginTop: '10px', color: '#666', fontSize: '0.9em' }}>
+        Memuat {name}...
+      </p>
+    </div>
+  );
 };
 
 export default MfeLoader;
